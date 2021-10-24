@@ -3,28 +3,46 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
-
-public class BehaviourTreeEditor : EditorWindow
+namespace AI.BehaviourTree
 {
-    [MenuItem("Zombist/BehaviourTreeEditor")]
-    public static void OpenWindow()
+    public class BehaviourTreeEditor : EditorWindow
     {
-        BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
-        wnd.titleContent = new GUIContent("BehaviourTreeEditor");
-    }
+        BehaviourTreeView treeView;
+        InspectorView inspectorView;
 
-    public void CreateGUI()
-    {
-        // Each editor window contains a root VisualElement object
-        VisualElement root = rootVisualElement;
+        [MenuItem("Zombist/BehaviourTreeEditor")]
+        public static void OpenWindow()
+        {
+            BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
+            wnd.titleContent = new GUIContent("BehaviourTreeEditor");
+        }
 
-        // Import UXML
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/ZAI/Editor/BehaviourTreeEditor.uxml");
-        visualTree.CloneTree(root);
+        public void CreateGUI()
+        {
+            // Each editor window contains a root VisualElement object
+            VisualElement root = rootVisualElement;
 
-        // A stylesheet can be added to a VisualElement.
-        // The style will be applied to the VisualElement and all of its children.
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/ZAI/Editor/BehaviourTreeEditor.uss");
-        root.styleSheets.Add(styleSheet);
+            // Import UXML
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/ZAI/Editor/BehaviourTreeEditor.uxml");
+            visualTree.CloneTree(root);
+
+            // A stylesheet can be added to a VisualElement.
+            // The style will be applied to the VisualElement and all of its children.
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/ZAI/Editor/BehaviourTreeEditor.uss");
+            root.styleSheets.Add(styleSheet);
+
+            treeView = root.Q<BehaviourTreeView>();
+            inspectorView = root.Q<InspectorView>();
+        }
+
+        private void OnSelectionChange()
+        {
+            BehaviourTree tree = Selection.activeObject as BehaviourTree;
+
+            if(tree)
+            {
+                treeView.PopulateView(tree);
+            }
+        }
     }
 }
