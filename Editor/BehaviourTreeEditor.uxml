@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="BehaviourTreeEditor.uss" />
+    <BTSplitView fixed-pane-initial-dimension="155">
+        <BTInspectorView name="left-view">
+            <BTInspectorView />
+        </BTInspectorView>
+        <BTInspectorView name="right-view">
+            <BehaviourTreeView focusable="true" />
+        </BTInspectorView>
+    </BTSplitView>
+</ui:UXML>
