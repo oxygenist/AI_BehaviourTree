@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Zombist.ZAI
+namespace AI.BehaviourTree
 {
     public enum State
     {
@@ -11,7 +11,7 @@ namespace Zombist.ZAI
         Success,
     }
 
-    public abstract class BTNode : ScriptableObject
+    public abstract class Node : ScriptableObject
     {
         public State state = State.Running;
         public bool started = false;

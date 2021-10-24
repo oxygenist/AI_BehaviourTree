@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Zombist.ZAI
+namespace AI.BehaviourTree
 {
-    [CreateAssetMenu(fileName = "BT", menuName = "Zombist/ZAI")]
+    [CreateAssetMenu(fileName = "BT", menuName = "AI/BehaviourTree")]
     public class BehaviourTree : ScriptableObject
     {
-        public BTNode rootNode;
+        public Node rootNode;
         public State treeState = State.Running; 
-        public List<BTNode> nodes = new List<BTNode>();
+        public List<Node> nodes = new List<Node>();
 
         public State Update()
         {
@@ -22,9 +22,9 @@ namespace Zombist.ZAI
             return treeState;
         }
 
-        public BTNode CreateNode(System.Type type)
+        public Node CreateNode(System.Type type)
         {
-            BTNode node = ScriptableObject.CreateInstance(type) as BTNode;
+            Node node = ScriptableObject.CreateInstance(type) as Node;
             node.name = type.Name;
             node.guid = GUID.Generate().ToString();
 
@@ -36,7 +36,7 @@ namespace Zombist.ZAI
             return node;
         }
 
-        public void DeleteNode(BTNode node)
+        public void DeleteNode(Node node)
         {
             nodes.Remove(node);
 
