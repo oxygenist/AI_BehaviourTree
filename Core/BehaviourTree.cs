@@ -43,5 +43,79 @@ namespace AI.BehaviourTree
             AssetDatabase.RemoveObjectFromAsset(node);
             AssetDatabase.SaveAssets();
         }
+
+        public void AddChild(Node parent, Node child)
+        {
+            DecoratorNode decorator = parent as DecoratorNode;
+            if(decorator)
+            {
+                decorator.child = child;
+            }
+
+            RootNode rootNode = parent as RootNode;
+            if (rootNode)
+            {
+                rootNode.child = child;
+            }
+
+            CompositeNode composite = parent as CompositeNode;
+            if (composite)
+            {
+                composite.childeren.Add(child);
+            }
+        }
+
+        public void RemoveChild(Node parent, Node child)
+        {
+            DecoratorNode decorator = parent as DecoratorNode;
+            if (decorator)
+            {
+                decorator.child = null;
+            }
+
+            RootNode rootNode = parent as RootNode;
+            if (rootNode)
+            {
+                rootNode.child = null;
+            }
+
+            CompositeNode composite = parent as CompositeNode;
+            if (composite)
+            {
+                composite.childeren.Remove(child);
+            }
+        }
+
+        public List<Node> GetChildern(Node parent)
+        {
+            List<Node> childern = new List<Node>();
+
+            DecoratorNode decorator = parent as DecoratorNode;
+            if (decorator && decorator.child != null)
+            {
+                childern.Add(decorator.child);
+            }
+
+            RootNode rootNode = parent as RootNode;
+            if (rootNode && rootNode.child != null)
+            {
+                childern.Add(rootNode.child);
+            }
+
+            CompositeNode composite = parent as CompositeNode;
+            if (composite)
+            {
+                return composite.childeren;
+            }
+
+            return childern;
+        }
+
+        public BehaviourTree Clone()
+        {
+            BehaviourTree tree = Instantiate(this);
+            tree.rootNode = tree.rootNode.Clone();
+            return tree;
+        }
     }
 }
