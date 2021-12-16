@@ -13,10 +13,10 @@ namespace AI.BehaviourTree
 
     public abstract class Node : ScriptableObject
     {
-        [HideInInspector] public State state = State.Running;
-        [HideInInspector] public bool started = false;
-        [HideInInspector] public string guid;
-        [HideInInspector] public Vector2 position;
+        public State state = State.Running;
+        public bool started = false;
+        public string guid;
+        public Vector2 position;
 
         public State Update()
         {

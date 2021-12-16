@@ -11,11 +11,12 @@ namespace AI.BehaviourTree
         BehaviourTreeView treeView;
         InspectorView inspectorView;
 
-        [MenuItem("Zombist/BehaviourTreeEditor")]
+        [MenuItem("Window/AI/BehaviourTreeEditor")]
         public static void OpenWindow()
         {
             BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
             wnd.titleContent = new GUIContent("BehaviourTreeEditor");
+            wnd.Show();
         }
 
         public void CreateGUI()

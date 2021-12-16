@@ -6,7 +6,7 @@ namespace AI.BehaviourTree
 {
     public class SequencerNode : CompositeNode
     {
-        int current;
+        public int current;
 
         protected override void OnStart()
         {
