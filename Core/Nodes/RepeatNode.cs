@@ -2,21 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RepeatNode : DecoratorNode
+namespace AI.BehaviourTree
 {
-    protected override void OnStart()
+    public class RepeatNode : DecoratorNode
     {
+        protected override void OnStart()
+        {
 
-    }
+        }
 
-    protected override void OnStop()
-    {
+        protected override void OnStop()
+        {
 
-    }
+        }
 
-    protected override State OnUpdate()
-    {
-        child.Update();
-        return State.Running;
+        protected override State OnUpdate()
+        {
+            child.Update();
+            return State.Running;
+        }
     }
 }

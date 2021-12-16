@@ -2,28 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaitNode : ActionNode
+namespace AI.BehaviourTree
 {
-    public float duration = -1;
-    float startTime;
-
-    protected override void OnStart()
+    public class WaitNode : ActionNode
     {
-        startTime = Time.time;
-    }
+        public float duration = -1;
+        float startTime;
 
-    protected override void OnStop()
-    {
-
-    }
-
-    protected override State OnUpdate()
-    {
-        if (Time.time - startTime > duration)
+        protected override void OnStart()
         {
-            return State.Success;
+            startTime = Time.time;
         }
 
-        return State.Running;
+        protected override void OnStop()
+        {
+
+        }
+
+        protected override State OnUpdate()
+        {
+            if (Time.time - startTime > duration)
+            {
+                return State.Success;
+            }
+
+            return State.Running;
+        }
     }
 }

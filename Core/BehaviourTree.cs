@@ -3,116 +3,119 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CreateAssetMenu(fileName = "BT", menuName = "AI/BehaviourTree")]
-public class BehaviourTree : ScriptableObject
+namespace AI.BehaviourTree
 {
-    public Node rootNode;
-    public State treeState = State.Running;
-    public List<Node> nodes = new List<Node>();
-
-    public State Update()
+    [CreateAssetMenu(fileName = "BT", menuName = "AI/BehaviourTree")]
+    public class BehaviourTree : ScriptableObject
     {
-        if (rootNode.state == State.Running)
+        public Node rootNode;
+        public State treeState = State.Running;
+        public List<Node> nodes = new List<Node>();
+
+        public State Update()
         {
-            treeState = rootNode.Update();
+            if (rootNode.state == State.Running)
+            {
+                treeState = rootNode.Update();
+            }
+
+            return treeState;
         }
 
-        return treeState;
-    }
-
-    public Node CreateNode(System.Type type)
-    {
-        Node node = ScriptableObject.CreateInstance(type) as Node;
-        node.name = type.Name;
-        node.guid = GUID.Generate().ToString();
-
-        nodes.Add(node);
-
-        AssetDatabase.AddObjectToAsset(node, this);
-        AssetDatabase.SaveAssets();
-
-        return node;
-    }
-
-    public void DeleteNode(Node node)
-    {
-        nodes.Remove(node);
-
-        AssetDatabase.RemoveObjectFromAsset(node);
-        AssetDatabase.SaveAssets();
-    }
-
-    public void AddChild(Node parent, Node child)
-    {
-        DecoratorNode decorator = parent as DecoratorNode;
-        if (decorator)
+        public Node CreateNode(System.Type type)
         {
-            decorator.child = child;
+            Node node = ScriptableObject.CreateInstance(type) as Node;
+            node.name = type.Name;
+            node.guid = GUID.Generate().ToString();
+
+            nodes.Add(node);
+
+            AssetDatabase.AddObjectToAsset(node, this);
+            AssetDatabase.SaveAssets();
+
+            return node;
         }
 
-        RootNode rootNode = parent as RootNode;
-        if (rootNode)
+        public void DeleteNode(Node node)
         {
-            rootNode.child = child;
+            nodes.Remove(node);
+
+            AssetDatabase.RemoveObjectFromAsset(node);
+            AssetDatabase.SaveAssets();
         }
 
-        CompositeNode composite = parent as CompositeNode;
-        if (composite)
+        public void AddChild(Node parent, Node child)
         {
-            composite.childeren.Add(child);
-        }
-    }
+            DecoratorNode decorator = parent as DecoratorNode;
+            if (decorator)
+            {
+                decorator.child = child;
+            }
 
-    public void RemoveChild(Node parent, Node child)
-    {
-        DecoratorNode decorator = parent as DecoratorNode;
-        if (decorator)
-        {
-            decorator.child = null;
-        }
+            RootNode rootNode = parent as RootNode;
+            if (rootNode)
+            {
+                rootNode.child = child;
+            }
 
-        RootNode rootNode = parent as RootNode;
-        if (rootNode)
-        {
-            rootNode.child = null;
-        }
-
-        CompositeNode composite = parent as CompositeNode;
-        if (composite)
-        {
-            composite.childeren.Remove(child);
-        }
-    }
-
-    public List<Node> GetChildern(Node parent)
-    {
-        List<Node> childern = new List<Node>();
-
-        DecoratorNode decorator = parent as DecoratorNode;
-        if (decorator && decorator.child != null)
-        {
-            childern.Add(decorator.child);
+            CompositeNode composite = parent as CompositeNode;
+            if (composite)
+            {
+                composite.childeren.Add(child);
+            }
         }
 
-        RootNode rootNode = parent as RootNode;
-        if (rootNode && rootNode.child != null)
+        public void RemoveChild(Node parent, Node child)
         {
-            childern.Add(rootNode.child);
+            DecoratorNode decorator = parent as DecoratorNode;
+            if (decorator)
+            {
+                decorator.child = null;
+            }
+
+            RootNode rootNode = parent as RootNode;
+            if (rootNode)
+            {
+                rootNode.child = null;
+            }
+
+            CompositeNode composite = parent as CompositeNode;
+            if (composite)
+            {
+                composite.childeren.Remove(child);
+            }
         }
 
-        CompositeNode composite = parent as CompositeNode;
-        if (composite)
+        public List<Node> GetChildern(Node parent)
         {
-            return composite.childeren;
+            List<Node> childern = new List<Node>();
+
+            DecoratorNode decorator = parent as DecoratorNode;
+            if (decorator && decorator.child != null)
+            {
+                childern.Add(decorator.child);
+            }
+
+            RootNode rootNode = parent as RootNode;
+            if (rootNode && rootNode.child != null)
+            {
+                childern.Add(rootNode.child);
+            }
+
+            CompositeNode composite = parent as CompositeNode;
+            if (composite)
+            {
+                return composite.childeren;
+            }
+
+            return childern;
         }
 
-        return childern;
-    }
-
-    public BehaviourTree Clone()
-    {
-        BehaviourTree tree = Instantiate(this);
-        tree.rootNode = tree.rootNode.Clone();
-        return tree;
+        public BehaviourTree Clone()
+        {
+            BehaviourTree tree = Instantiate(this);
+            tree.rootNode = tree.rootNode.Clone();
+            return tree;
+        }
     }
 }

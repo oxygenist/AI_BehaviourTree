@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugLogNode : ActionNode
+namespace AI.BehaviourTree
 {
-    public string message;
-
-    protected override void OnStart()
+    public class DebugLogNode : ActionNode
     {
-        Debug.Log($"OnStart ({message})");
-    }
+        public string message;
 
-    protected override void OnStop()
-    {
-        Debug.Log($"OnStop ({message})");
-    }
+        protected override void OnStart()
+        {
+            Debug.Log($"OnStart ({message})");
+        }
 
-    protected override State OnUpdate()
-    {
-        Debug.Log($"OnUpdate ({message})");
+        protected override void OnStop()
+        {
+            Debug.Log($"OnStop ({message})");
+        }
 
-        return State.Success;
+        protected override State OnUpdate()
+        {
+            Debug.Log($"OnUpdate ({message})");
+
+            return State.Success;
+        }
     }
 }

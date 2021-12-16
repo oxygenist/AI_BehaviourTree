@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ActionNode : Node
+namespace AI.BehaviourTree
 {
+    public abstract class ActionNode : Node
+    {
 
+    }
 }

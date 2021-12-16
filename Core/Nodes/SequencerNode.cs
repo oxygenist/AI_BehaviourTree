@@ -2,35 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SequencerNode : CompositeNode
+namespace AI.BehaviourTree
 {
-    int current;
-
-    protected override void OnStart()
+    public class SequencerNode : CompositeNode
     {
-        current = 0;
-    }
+        int current;
 
-    protected override void OnStop()
-    {
-
-    }
-
-    protected override State OnUpdate()
-    {
-        var child = childeren[current];
-
-        switch (child.Update())
+        protected override void OnStart()
         {
-            case State.Running:
-                return State.Running;
-            case State.Failure:
-                return State.Failure;
-            case State.Success:
-                current++;
-                break;
+            current = 0;
         }
 
-        return current == childeren.Count ? State.Success : State.Running;
+        protected override void OnStop()
+        {
+
+        }
+
+        protected override State OnUpdate()
+        {
+            var child = childeren[current];
+
+            switch (child.Update())
+            {
+                case State.Running:
+                    return State.Running;
+                case State.Failure:
+                    return State.Failure;
+                case State.Success:
+                    current++;
+                    break;
+            }
+
+            return current == childeren.Count ? State.Success : State.Running;
+        }
     }
 }

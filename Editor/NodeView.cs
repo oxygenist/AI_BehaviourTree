@@ -4,94 +4,97 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 
-public class NodeView : UnityEditor.Experimental.GraphView.Node
+namespace AI.BehaviourTree
 {
-    public Action<NodeView> OnNodeSelected;
-
-    public Node node;
-    public Port input;
-    public Port output;
-
-    public NodeView(Node node)
+    public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
-        this.node = node;
-        this.title = node.name;
-        this.viewDataKey = node.guid;
+        public Action<NodeView> OnNodeSelected;
 
-        style.left = node.position.x;
-        style.top = node.position.y;
+        public Node node;
+        public Port input;
+        public Port output;
 
-        CreateInputPorts();
-        CreateOutputPorts();
-    }
+        public NodeView(Node node)
+        {
+            this.node = node;
+            this.title = node.name;
+            this.viewDataKey = node.guid;
 
-    private void CreateInputPorts()
-    {
-        if (node is ActionNode)
-        {
-            input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
-        }
-        else if (node is CompositeNode)
-        {
-            input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
-        }
-        else if (node is DecoratorNode)
-        {
-            input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
-        }
-        else if (node is RootNode)
-        {
+            style.left = node.position.x;
+            style.top = node.position.y;
 
+            CreateInputPorts();
+            CreateOutputPorts();
         }
 
-        if (input != null)
+        private void CreateInputPorts()
         {
-            input.portName = "";
-            inputContainer.Add(input);
+            if (node is ActionNode)
+            {
+                input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
+            }
+            else if (node is CompositeNode)
+            {
+                input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
+            }
+            else if (node is DecoratorNode)
+            {
+                input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
+            }
+            else if (node is RootNode)
+            {
+
+            }
+
+            if (input != null)
+            {
+                input.portName = "";
+                inputContainer.Add(input);
+            }
         }
-    }
 
-    private void CreateOutputPorts()
-    {
-        if (node is ActionNode)
+        private void CreateOutputPorts()
         {
+            if (node is ActionNode)
+            {
 
+            }
+            else if (node is CompositeNode)
+            {
+                output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+            }
+            else if (node is DecoratorNode)
+            {
+                output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+            }
+            else if (node is RootNode)
+            {
+                output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+            }
+
+            if (output != null)
+            {
+                output.portName = "";
+                outputContainer.Add(output);
+            }
         }
-        else if (node is CompositeNode)
+
+        public override void SetPosition(Rect newPos)
         {
-            output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
-        }
-        else if (node is DecoratorNode)
-        {
-            output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
-        }
-        else if (node is RootNode)
-        {
-            output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+            base.SetPosition(newPos);
+
+            node.position.x = newPos.xMin;
+            node.position.y = newPos.yMin;
         }
 
-        if (output != null)
+        public override void OnSelected()
         {
-            output.portName = "";
-            outputContainer.Add(output);
-        }
-    }
+            base.OnSelected();
 
-    public override void SetPosition(Rect newPos)
-    {
-        base.SetPosition(newPos);
-
-        node.position.x = newPos.xMin;
-        node.position.y = newPos.yMin;
-    }
-
-    public override void OnSelected()
-    {
-        base.OnSelected();
-
-        if (OnNodeSelected != null)
-        {
-            OnNodeSelected.Invoke(this);
+            if (OnNodeSelected != null)
+            {
+                OnNodeSelected.Invoke(this);
+            }
         }
     }
 }

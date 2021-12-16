@@ -2,45 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum State
+namespace AI.BehaviourTree
 {
-    Running,
-    Failure,
-    Success,
-}
-
-public abstract class Node : ScriptableObject
-{
-    [HideInInspector] public State state = State.Running;
-    [HideInInspector] public bool started = false;
-    [HideInInspector] public string guid;
-    [HideInInspector] public Vector2 position;
-
-    public State Update()
+    public enum State
     {
-        if (started.Equals(false))
-        {
-            OnStart();
-            started = true;
-        }
-
-        state = OnUpdate();
-
-        if (state.Equals(State.Failure) || state == State.Success)
-        {
-            OnStop();
-            started = false;
-        }
-
-        return state;
+        Running,
+        Failure,
+        Success,
     }
 
-    public virtual Node Clone()
+    public abstract class Node : ScriptableObject
     {
-        return Instantiate(this);
-    }
+        [HideInInspector] public State state = State.Running;
+        [HideInInspector] public bool started = false;
+        [HideInInspector] public string guid;
+        [HideInInspector] public Vector2 position;
 
-    protected abstract void OnStart();
-    protected abstract void OnStop();
-    protected abstract State OnUpdate();
+        public State Update()
+        {
+            if (started.Equals(false))
+            {
+                OnStart();
+                started = true;
+            }
+
+            state = OnUpdate();
+
+            if (state.Equals(State.Failure) || state == State.Success)
+            {
+                OnStop();
+                started = false;
+            }
+
+            return state;
+        }
+
+        public virtual Node Clone()
+        {
+            return Instantiate(this);
+        }
+
+        protected abstract void OnStart();
+        protected abstract void OnStop();
+        protected abstract State OnUpdate();
+    }
 }

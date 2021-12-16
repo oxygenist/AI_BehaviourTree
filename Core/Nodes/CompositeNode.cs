@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public abstract class CompositeNode : Node
+namespace AI.BehaviourTree
 {
-    [HideInInspector] public List<Node> childeren = new List<Node>();
-
-    public override Node Clone()
+    public abstract class CompositeNode : Node
     {
-        CompositeNode node = Instantiate(this);
-        node.childeren = childeren.ConvertAll(c => c.Clone());
-        return node;
+        [HideInInspector] public List<Node> childeren = new List<Node>();
+
+        public override Node Clone()
+        {
+            CompositeNode node = Instantiate(this);
+            node.childeren = childeren.ConvertAll(c => c.Clone());
+            return node;
+        }
     }
 }
