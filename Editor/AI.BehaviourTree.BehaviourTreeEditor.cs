@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using UnityEditor.Callbacks;
 
 
 namespace AI.BehaviourTree
@@ -17,6 +18,18 @@ namespace AI.BehaviourTree
             BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
             wnd.titleContent = new GUIContent("BehaviourTreeEditor");
             wnd.Show();
+        }
+
+        [OnOpenAsset]
+        public static bool OnOpenAsset(int instanceId, int line)
+        {
+            if(Selection.activeObject is BehaviourTree)
+            {
+                OpenWindow();
+                return true;
+            }
+
+            return false;
         }
 
         public void CreateGUI()
