@@ -14,7 +14,7 @@ namespace AI.BehaviourTree
         public Port input;
         public Port output;
 
-        public NodeView(Node node)
+        public NodeView(Node node) : base("Assets/ZAI/Editor/NodeView.uxml")
         {
             this.node = node;
             this.title = node.name;

@@ -1,0 +1,15 @@
+#node-border {
+    background-color: rgba(70, 70, 70, 255);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#input {
+    align-items: center;
+}
+
+#output {
+    align-items: center;
+}
