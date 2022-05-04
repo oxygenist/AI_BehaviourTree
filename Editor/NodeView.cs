@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
+using UnityEditor;
+using UnityEditor.UIElements;
 
 namespace AI.BehaviourTree
 {
@@ -25,6 +28,31 @@ namespace AI.BehaviourTree
 
             CreateInputPorts();
             CreateOutputPorts();
+            SetupClasses();
+
+            Label descriptionLabel = this.Q<Label>("description");
+            descriptionLabel.bindingPath = "description";
+            descriptionLabel.Bind(new SerializedObject(node));
+        }
+
+        private void SetupClasses()
+        {
+            if (node is ActionNode)
+            {
+                AddToClassList("action");
+            }
+            else if (node is CompositeNode)
+            {
+                AddToClassList("composite");
+            }
+            else if (node is DecoratorNode)
+            {
+                AddToClassList("decorator");
+            }
+            else if (node is RootNode)
+            {
+                AddToClassList("root");
+            }
         }
 
         private void CreateInputPorts()
@@ -49,6 +77,7 @@ namespace AI.BehaviourTree
             if (input != null)
             {
                 input.portName = "";
+                input.style.flexDirection = FlexDirection.Column;
                 inputContainer.Add(input);
             }
         }
@@ -75,6 +104,7 @@ namespace AI.BehaviourTree
             if (output != null)
             {
                 output.portName = "";
+                output.style.flexDirection = FlexDirection.ColumnReverse;
                 outputContainer.Add(output);
             }
         }
@@ -83,8 +113,12 @@ namespace AI.BehaviourTree
         {
             base.SetPosition(newPos);
 
+            Undo.RecordObject(node, "Behaviour Tree (Set Position)");
+
             node.position.x = newPos.xMin;
             node.position.y = newPos.yMin;
+
+            EditorUtility.SetDirty(node);
         }
 
         public override void OnSelected()
@@ -94,6 +128,46 @@ namespace AI.BehaviourTree
             if (OnNodeSelected != null)
             {
                 OnNodeSelected.Invoke(this);
+            }
+        }
+
+        public void SortChildren()
+        {
+            CompositeNode composite = node as CompositeNode;
+            if (composite)
+            {
+                composite.childeren.Sort(SortByHorizontalPosition);
+            }
+        }
+
+        private int SortByHorizontalPosition(Node left, Node right)
+        {
+            return left.position.x < right.position.x ? -1 : 1;
+        }
+
+        public void UpdateState()
+        {
+            RemoveFromClassList("running");
+            RemoveFromClassList("failure");
+            RemoveFromClassList("success");
+
+            if (Application.isPlaying)
+            {
+                switch (node.state)
+                {
+                    case State.Running:
+                        if (node.started)
+                        {
+                            AddToClassList("running");
+                        }
+                        break;
+                    case State.Failure:
+                        AddToClassList("failure");
+                        break;
+                    case State.Success:
+                        AddToClassList("success");
+                        break;
+                }
             }
         }
     }

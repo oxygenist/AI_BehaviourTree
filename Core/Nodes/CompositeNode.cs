@@ -12,7 +12,7 @@ namespace AI.BehaviourTree
         {
             CompositeNode node = Instantiate(this);
             node.childeren = childeren.ConvertAll(c => c.Clone());
-            return node;
+            return node; 
         }
     }
 }

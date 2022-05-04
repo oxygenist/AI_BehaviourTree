@@ -27,6 +27,14 @@ namespace AI.BehaviourTree
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/ZAI/Editor/BehaviourTreeEditor.uss");
             styleSheets.Add(styleSheet);
+
+            Undo.undoRedoPerformed += OnUndoRedo;
+        }
+
+        private void OnUndoRedo()
+        {
+            PopulateView(tree);
+            AssetDatabase.SaveAssets();
         }
 
         NodeView FindNodeView(Node node)
@@ -55,7 +63,7 @@ namespace AI.BehaviourTree
             // Create edges
             tree.nodes.ForEach(n =>
             {
-                var childern = tree.GetChildern(n);
+                var childern = tree.GetChildren(n);
                 childern.ForEach(c =>
                 {
                     NodeView parentView = FindNodeView(n);
@@ -106,6 +114,15 @@ namespace AI.BehaviourTree
                 });
             }
 
+            if (graphViewChange.movedElements != null)
+            {
+                nodes.ForEach((n) =>
+                {
+                    NodeView view = n as NodeView;
+                    view.SortChildren();
+                });
+            }
+
             return graphViewChange;
         }
 
@@ -149,6 +166,15 @@ namespace AI.BehaviourTree
             NodeView nodeView = new NodeView(node);
             nodeView.OnNodeSelected = OnNodeSelected;
             AddElement(nodeView);
+        }
+
+        public void UpdateNodeState()
+        {
+            nodes.ForEach(n =>
+            {
+                NodeView view = n as NodeView;
+                view.UpdateState();
+            });
         }
     }
 }
